@@ -1,0 +1,13 @@
+{% extends 'base.html.twig'  %}
+
+{% form_theme form 'bootstrap_5_layout.html.twig' %}
+{% block body %}
+    <h2>Ajouter un matériel pour un client </h2>
+
+    {{ form(form) }}
+{% endblock%}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/check_form_client_material.js') }}"></script>
+{% endblock %}

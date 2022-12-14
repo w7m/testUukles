@@ -1,0 +1,26 @@
+{% extends 'base.html.twig'  %}
+
+{% block body %}
+    <h1>Liste des totales des matériels par client : </h1>
+
+    <h5>Avec le client le plus rentable, c'est :  <strong>{{  totalSold[0][0].firstName}}</strong>
+            {{  totalSold[0][0].firstName}} de  <strong>{{  totalSold[0]['rentable'] }} €</strong></h5>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>PRENOM</th>
+            <th>NOM</th>
+            <th>TOTAL VENDU</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for sold in totalSold %}
+            <tr>
+                <td>{{ sold[0].firstName }}</td>
+                <td>{{ sold[0].lastName }}</td>
+                <td>{{ sold['sumPrice'] }} €</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

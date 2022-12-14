@@ -1,0 +1,27 @@
+{% extends 'base.html.twig'  %}
+
+{% block body %}
+
+<h4>
+    Les clients ont plus de 30 matériels, et dont le matériel vendu est
+    supérieur à 3000 euros sont :
+</h4>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>PRENOM</th>
+            <th>NOM</th>
+            <th>NOMBRE MATERIAL</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for clientPrice in clientByPrice %}
+            <tr>
+                <td>{{ clientPrice[0].firstName }}</td>
+                <td>{{ clientPrice[0].lastName }}</td>
+                <td>{{ clientPrice['nbrMaterial'] }} </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
