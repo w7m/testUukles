@@ -24,11 +24,11 @@ class Client
     #[ORM\Column(length: 100)]
     private ?string $email = null;
 
-    #[ORM\OneToMany(mappedBy: 'client', targetEntity: Material::class)]
-    private Collection $materials;
-
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $created_at = null;
+
+    #[ORM\ManyToMany(targetEntity: Material::class, inversedBy: 'clients')]
+    private Collection $materials;
 
     public function __construct()
     {
@@ -76,6 +76,18 @@ class Client
         return $this;
     }
 
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->created_at;
+    }
+
+    public function setCreatedAt(?\DateTimeImmutable $created_at): self
+    {
+        $this->created_at = $created_at;
+
+        return $this;
+    }
+
     /**
      * @return Collection<int, Material>
      */
@@ -88,7 +100,6 @@ class Client
     {
         if (!$this->materials->contains($material)) {
             $this->materials->add($material);
-            $material->setClient($this);
         }
 
         return $this;
@@ -96,24 +107,7 @@ class Client
 
     public function removeMaterial(Material $material): self
     {
-        if ($this->materials->removeElement($material)) {
-            // set the owning side to null (unless already changed)
-            if ($material->getClient() === $this) {
-                $material->setClient(null);
-            }
-        }
-
-        return $this;
-    }
-
-    public function getCreatedAt(): ?\DateTimeImmutable
-    {
-        return $this->created_at;
-    }
-
-    public function setCreatedAt(?\DateTimeImmutable $created_at): self
-    {
-        $this->created_at = $created_at;
+        $this->materials->removeElement($material);
 
         return $this;
     }

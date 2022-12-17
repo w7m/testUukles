@@ -12,15 +12,16 @@
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"></script>
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
             <script src="https://code.jquery.com/jquery-3.6.2.slim.min.js" integrity="sha256-E3P3OaTZH+HlEM7f1gdAT3lHAn4nWBZXuYe89DFg2d0=" crossorigin="anonymous"></script>
+            <script src="{{ asset('js/check_form_client_material.js') }}"></script>
         {% endblock %}
     </head>
     <body>
-        <div class="container mt-4">
-            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container mt-4 ">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item active">
-                            <a class="nav-link" href="{{path('app_home')}}">Home <span class="sr-only">Page d'accueil</span></a>
+                            <a class="nav-link" href="{{path('app_home')}}"><span class="sr-only">Page d'accueil</span></a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ path('total_sold') }}">Client le plus rentable</a>
@@ -29,11 +30,22 @@
                             <a class="nav-link" href="{{ path('client_by_price') }}">Clients ont plus de 30 matériels</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ path('add_material_client') }}">Ajouter un nouveau matériel</a>
+                            <a class="nav-link" href="{{ path('material_list') }}">Matériels</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('client_list') }}">Clients</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('add_material_client') }}">Ajouter un matériel pour un client</a>
                         </li>
                     </ul>
                 </div>
             </nav>
+            {% for message in app.flashes('success') %}
+                <div class="alert alert-success">
+                    {{ message }}
+                </div>
+            {% endfor %}
             {% block body %}{% endblock %}
         </div>
     </body>

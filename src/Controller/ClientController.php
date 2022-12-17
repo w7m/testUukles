@@ -2,8 +2,8 @@
 
 namespace App\Controller;
 
-use App\Entity\Material;
-use App\Form\MaterialType;
+use App\Entity\Client;
+use App\Form\ClientType;
 use App\Repository\ClientRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -13,60 +13,66 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ClientController extends AbstractController
 {
-    const CONSTRAINT_MATERIAL = 30 ;
 
-    const CONSTRAINT_PRICE = 3000 ;
-    /**
-     *
-     * @param ClientRepository $clientRepository
-     *
-     * @return Response
-     *
-     * @Route("/total-sold", name="total_sold")
-     */
-    public function totalSold(ClientRepository $clientRepository): Response
+    private EntityManagerInterface $entityManager;
+
+    public function __construct(EntityManagerInterface $entityManager)
     {
-        return $this->render('material-client/total_sold.html.twig',[
-            'totalSold' => $clientRepository->getSold()
-        ]);
+        $this->entityManager = $entityManager;
     }
 
-    /**
-     * @param ClientRepository $clientRepository
-     * @return Response
-     *
-     * @Route("/client-by-price", name="client_by_price")
-     */
-    public function restrictClientByMaterial(ClientRepository $clientRepository): Response
+    #[Route('/add-client', name: 'add_client')]
+    public function postClient(Request $request): Response
     {
-        return $this->render('material-client/client_by_price_material.html.twig',[
-            'clientByPrice' => $clientRepository->getClientByNbrMaterial(self::CONSTRAINT_MATERIAL,self::CONSTRAINT_PRICE)
-        ]);
-    }
-
-    /**
-     * @param Request $request
-     * @param EntityManagerInterface $manager
-     * @return Response
-     *
-     * @Route("/add-material-client", name="add_material_client")
-     */
-    public function postMaterialToClient(Request $request, EntityManagerInterface $manager): Response
-    {
-        $material = new Material();
-        $material->setCreatedAt(new \DateTimeImmutable('now'));
-        $form = $this->createForm(MaterialType::class, $material);
+        $client = new Client();
+        $client->setCreatedAt(new \DateTimeImmutable('now'));
+        $form = $this->createForm(ClientType::class, $client);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $material = $form->getData();
-            $manager->persist($material);
-            $manager->flush();
+            $client = $form->getData();
+            $this->entityManager->persist($client);
+            $this->entityManager->flush();
             $this->addFlash('success', 'Enregistrement effectué avec succès');
-            return $this->redirectToRoute('app_home');
+            return $this->redirectToRoute('client_list');
         }
 
-        return $this->render('material-client/new.html.twig', [
-            'form' => $form->createView()
+        return $this->render('material-client/new_client.html.twig', [
+            'form' => $form->createView(),
+            'title' => 'Ajouter un nouveau client'
+        ]);
+    }
+
+    #[Route('/edit-client/{id}', name: 'edit_client')]
+    public function editClient(Client $client, Request $request): Response
+    {
+        $form = $this->createForm(ClientType::class, $client);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->entityManager->flush();
+            $this->addFlash('success', 'Modification effectuée avec succès');
+            return $this->redirectToRoute('client_list');
+        }
+
+        return $this->render('material-client/new_client.html.twig', [
+            'form' => $form->createView(),
+            'title' => 'Modifier le client'
+        ]);
+    }
+
+    #[Route('/delete-client/{id}', name: 'delete_client')]
+    public function deleteClient(Client $client): Response
+    {
+        $this->entityManager->remove($client);
+        $this->entityManager->flush();
+        $this->addFlash('success', 'Suppression effectuée avec succès');
+        return $this->redirectToRoute('client_list');
+    }
+
+    #[Route('/list-client', name: 'client_list')]
+    public function clientList(ClientRepository $clientRepository): Response
+    {
+        return $this->render('material-client/client_list.hmtl.twig' , [
+            'clients' => $clientRepository->findAll()
         ]);
     }
 }

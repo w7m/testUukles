@@ -18,11 +18,11 @@ class AppFixtures extends Fixture
                 ->setCreatedAt(new \DateTimeImmutable('now'))
                 ->setEmail('jean' . $i . '.jack@jean.com');
             $material = new Material();
-            $material->setClient($client)
-                ->setPrice(10 + $i)
+            $material->setPrice(10 + $i)
                 ->setName('material ' . $i)
                 ->setCreatedAt(new \DateTimeImmutable('now'))
                 ->setDescription('description material ' . $i);
+            $client->addMaterial($material);
             $manager->persist($client);
             $manager->persist($material);
         }
@@ -32,31 +32,39 @@ class AppFixtures extends Fixture
             ->setLastName('marceau')
             ->setCreatedAt(new \DateTimeImmutable('now'))
             ->setEmail('.pierre@marceau.com');
-        $manager->persist($client);
         $this->loadMaterial($manager, $client,2800);
+        $manager->persist($client);
 
         $client = new Client();
         $client->setFirstName('hugo')
             ->setLastName('pierre')
             ->setCreatedAt(new \DateTimeImmutable('now'))
             ->setEmail('.hugo@hugo.com');
-        $manager->persist($client);
         $this->loadMaterial($manager, $client, 3000);
+        $manager->persist($client);
 
         $manager->flush();
     }
 
 
-    private function loadMaterial(ObjectManager $manager, Client $client, int $sum) : void
+    /**
+     * @param ObjectManager $manager
+     * @param Client $client
+     * @param int $sum
+     * @return Client
+     */
+    private function loadMaterial(ObjectManager $manager, Client $client, int $sum) : client
     {
         for ($i=1;$i<35;$i++) {
             $material = new Material();
-            $material->setClient($client)
+            $material
                 ->setPrice($sum + $i)
                 ->setName('material ' . $i)
                 ->setCreatedAt(new \DateTimeImmutable('now'))
                 ->setDescription('description material ' . $i);
             $manager->persist($material);
+            $client->addMaterial($material);
         }
+        return $client;
     }
 }

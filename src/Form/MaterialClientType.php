@@ -13,37 +13,26 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class MaterialType extends AbstractType
+class MaterialClientType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('name',TextType::class, [
-                'label'=> 'Name',
-                'required' => false,
+            ->add('client', EntityType::class, [
+                'class' => Client::class,
+                'choice_label' => 'firstName',
                 'attr' => [
-                    'class' => 'name-material',
+                    'class' => 'client-check'
                 ]
             ])
-            ->add('description', TextareaType::class, [
-                'label' => 'Description',
-                'required' => false,
+            ->add('material', EntityType::class, [
+                'class' => Material::class,
+                'choice_label' => 'name',
                 'attr' => [
-                    'class' => 'description-material'
+                    'class' => 'client-check'
                 ]
-            ])
-            ->add('price', NumberType::class, [
-                'label' => 'Prix',
-                'required' => false,
             ])
             ->add('Sauvgarder' ,SubmitType::class)
         ;
-    }
-
-    public function configureOptions(OptionsResolver $resolver): void
-    {
-        $resolver->setDefaults([
-            'data_class' => Material::class,
-        ]);
     }
 }

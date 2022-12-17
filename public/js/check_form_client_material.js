@@ -1,15 +1,21 @@
 $(document).ready(function() {
     let result;
     $('form[name="material"]').submit(function(e) {
-        result = checkForm();
+        result = checkFormMaterial();
+        e.preventDefault();
+        if (result === false) {
+            this.submit();
+        }
+    });
+    $('form[name="client"]').submit(function(e) {
+        result = checkFormClient();
         e.preventDefault();
         if (result === false) {
             this.submit();
         }
     });
 });
-
-function checkForm()
+function checkFormMaterial()
 {
     check = false;
     var material_name = $('#material_name').val();
@@ -32,9 +38,32 @@ function checkForm()
         check = true;
         $('#material_price').after('<span class="error text-danger">Veuillez ajouter un prix valide</span>');
     }
-    if( $('#material_client').has('option').length < 0 ) {
+    return check;
+}
+
+function checkFormClient()
+{
+    check = false;
+    var client_firstName = $('#client_firstName').val();
+    var client_lastName = $('#client_lastName').val();
+    var client_email = $('#client_email').val();
+    $(".error").remove();
+
+    if (client_firstName.length < 1) {
         check = true;
-        $('#material_client').after('<span class="error text-danger">Veuillez selectionner un client</span>');
+        $('#client_firstName').after('<span class="error text-danger">Ce champ est obligatoire</span>');
+    }
+    if (client_lastName.length < 1) {
+        check = true;
+        $('#client_lastName').after('<span class="error text-danger">Ce champ est obligatoire</span>');
+    }
+    if (client_email.length < 1 || !isEmail(client_email)) {
+        check = true;
+        $('#client_email').after('<span class="error text-danger">Merci d\'ajouter un email valide</span>');
     }
     return check;
+}
+function isEmail(email) {
+    var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+    return regex.test(email);
 }

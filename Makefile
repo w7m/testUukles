@@ -165,11 +165,8 @@ doctrine-migrations-version: ##  [version] Manually add and delete migration ver
 doctrine-query-dql: ##  Executes arbitrary DQL directly from the command line
 	@docker-compose exec -T server php bin/console doctrine:query:dql
 
-doctrine-query-sql: ##  Executes arbitrary SQL directly from the command line.
-	@docker-compose exec -T server php bin/console doctrine:query:sql
-
-doctrine-fixtures-load: ##  Executes arbitrary SQL directly from the command line.
-	@docker-compose exec -T server php bin/console  doctrine:fixtures:load --append
+doctrine-fixtures-load: ##  Load fixture.
+	@docker-compose exec -T server php bin/console  doctrine:fixtures:load
 
 ## -------------------------------------------------Lint-------------------------------------------------
 

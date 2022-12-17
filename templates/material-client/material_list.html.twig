@@ -1,16 +1,18 @@
 {% extends 'base.html.twig'  %}
 
 {% block body %}
-    <h2 class="mt-2">Liste des matériels avec les clients </h2>
+    <h1>Liste des matériels : </h1>
 
+    <a class="btn btn-link" href="{{ path('add_material') }}">Ajouter un matériel</a>
 
     <table class="table table-bordered">
         <thead>
         <tr>
-            <th>MATERIEL NAME</th>
-            <th>MATERIEL DESCRIPTION</th>
-            <th>MATERIEL PRIX</th>
-            <th>CLIENTS</th>
+            <th>NOM</th>
+            <th>DESCRIPTION</th>
+            <th>PRIX</th>
+            <th> </th>
+
         </tr>
         </thead>
         <tbody>
@@ -20,9 +22,9 @@
                 <td>{{ material.description }}</td>
                 <td>{{ material.price }} €</td>
                 <td>
-                    {% for client in material.clients  %}
-                    {{ client.firstName }} {{ client.lastName }}<br />
-                    {% endfor %}
+                    <a href="{{ path('edit_material' , { 'id': material.id  }) }}">Modifier</a>
+                <br />
+                    <a href="{{ path('delete_material' , { 'id': material.id  }) }}">Supprimer</a>
                 </td>
             </tr>
         {% endfor %}
